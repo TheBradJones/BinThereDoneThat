@@ -2,16 +2,26 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Movement")]
     public float speed = 25.0f;
-    public float jumpSpeed = 8.0f;
-    public float gravity = 20.0f;
-    public float sensitivity = 5f;
 
+    [Header("Jump")]
+    public float jumpSpeed = 8.0f;
+    public float jumpHeight = 10.0f;
+    public float gravity = 10.0f;
+
+    [Header("Camera")]
+    public float sensitivity = 5.0f;
+
+    public Transform cameraTransform;
     CharacterController controller;
 
     float horizontal, vertical;
     float mouseX, mouseY;
     bool jump;
+
+    float pitch;
+    float verticalVelocity;
 
     void Awake()
     {
@@ -32,33 +42,36 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector3 moveDirection = Vector3.zero;
+        Vector3 moveDirection = new Vector3(horizontal, 0, vertical);
+        moveDirection = transform.TransformDirection(moveDirection);
+        moveDirection *= speed;
 
         if (controller.isGrounded)
         {
-            moveDirection = new Vector3(horizontal, 0, vertical);
-            moveDirection = transform.TransformDirection(moveDirection);
+            verticalVelocity = -2f;
 
-            moveDirection *= speed;
-
-            if (jump)
-                moveDirection.y = jumpSpeed;
+            if (jump) 
+            {
+                Debug.Log("Jumping");
+                verticalVelocity = Mathf.Sqrt(2f * gravity * jumpHeight);
+            }
+        }
+        else
+        {
+            verticalVelocity -= gravity * Time.deltaTime;
         }
 
         float turner = mouseX * sensitivity;
         if (turner  != 0)
         {
-            transform.eulerAngles += new Vector3(0, turner, 0);
+            transform.Rotate(0, turner, 0);
         }
 
-        float looker = -mouseY * sensitivity;
-        if (looker != 0)
-        {
-            transform.eulerAngles += new Vector3(looker, 0, 0);
-        }
+        pitch -= mouseY * sensitivity;
+        pitch = Mathf.Clamp(pitch, -89, 89);
+        cameraTransform.localEulerAngles = new Vector3(pitch, 0f, 0f);
 
-        moveDirection.y -= gravity * Time.deltaTime;
-
+        moveDirection.y = verticalVelocity;
         controller.Move(moveDirection * Time.deltaTime);
     }
 }
