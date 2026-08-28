@@ -5,15 +5,22 @@ public class Interactable : MonoBehaviour
     public float interactionRange = 5f;
     public LayerMask interactableLayer;
 
-    void FixedUpdate()
+    private PlayerController pc;
+
+    void Start()
+    {
+        pc = FindAnyObjectByType<PlayerController>();
+    }
+
+    void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             RaycastHit hit;
 
             // origin, direction, out, duration, layer
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, interactionRange, interactableLayer))
+            if (Physics.Raycast(pc.cameraTransform.position, pc.cameraTransform.forward, out hit, interactionRange, interactableLayer))
             {
 
                 if (hit.collider.CompareTag("Door"))
@@ -25,13 +32,23 @@ public class Interactable : MonoBehaviour
                         Debug.Log("Door component is null");
                 }
 
-                if (hit.collider.CompareTag("Sliding"))
+                else if (hit.collider.CompareTag("Sliding"))
                 {
                     SlidingDoor door = hit.collider.GetComponent<SlidingDoor>();
                     if (door != null)
                         door.OpenDoor();
                     else
                         Debug.Log("Door component is null");
+                }
+
+                else if (hit.collider.CompareTag("Trash"))
+                {
+                    if (pc.isCarrying)
+                    {
+                        pc.Drop();
+                    }
+                    else
+                        pc.PickupTrash(hit.collider.gameObject);
                 }
             }
         }
