@@ -41,7 +41,7 @@ public class Interactable : MonoBehaviour
                         Debug.Log("Door component is null");
                 }
 
-                else if (hit.collider.CompareTag("Trash"))
+                else if (hit.collider.CompareTag("Trash") || hit.collider.CompareTag("Valuable")) 
                 {
                     if (pc.isCarrying)
                     {
