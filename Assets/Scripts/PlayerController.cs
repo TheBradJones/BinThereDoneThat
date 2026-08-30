@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     public KeyCode throwKey = KeyCode.Mouse0;
     public Transform holdPoint;
     public int maxCarry = 1;
-    public int pickupUpgrade = 1;
+    public int toolUpgrade = 1;
 
     int carryCount;
     int valuableCount;
@@ -50,8 +50,14 @@ public class PlayerController : MonoBehaviour
     bool isCharging;
     float chargeTime;
 
+    [Header("Picker Upper Tool")]
+    public GameObject binObj;
+    public GameObject toolObj;
+    public Transform binPos;
+    public Transform toolPos;
+
     GameObject trashObject;
-    Rigidbody rb;
+    Rigidbody trashRb;
 
     void Awake()
     {
@@ -125,31 +131,28 @@ public class PlayerController : MonoBehaviour
 
         
         // Individual trash carry
-        if (pickupUpgrade == 1)
-        {
-            if (isCarrying) return;
+        if (isCarrying) return;
 
-            trashObject = trashObj;
+        trashObject = trashObj;
 
-            rb = trashObj.GetComponent<Rigidbody>();
+        trashRb = trashObj.GetComponent<Rigidbody>();
 
-            rb.isKinematic = true;
-            rb.useGravity = false;
-            rb.detectCollisions = true;
+        trashRb.isKinematic = true;
+        trashRb.useGravity = false;
+        trashRb.detectCollisions = true;
 
-            trashObject.transform.SetParent(holdPoint, true);
-            trashObject.transform.localPosition = Vector3.zero;
+        trashObject.transform.SetParent(holdPoint, true);
+        trashObject.transform.localPosition = Vector3.zero;
 
-            carryCount++;
-            isCarrying = true;
+        carryCount++;
+        isCarrying = true;
 
-            /*
-            if (trashObject.tag == "Trash")
-                trashCount++;
-            else if (trashObject.tag == "Valuable")
-                valuableCount++;
-            */
-        }
+        /*
+        if (trashObject.tag == "Trash")
+            trashCount++;
+        else if (trashObject.tag == "Valuable")
+            valuableCount++;
+        */
     }
 
     public void Drop()
@@ -166,16 +169,16 @@ public class PlayerController : MonoBehaviour
 
         trashObject.transform.position = holdPoint.position;
 
-        rb.isKinematic = false;
-        rb.useGravity = true;
+        trashRb.isKinematic = false;
+        trashRb.useGravity = true;
 
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+        trashRb.linearVelocity = Vector3.zero;
+        trashRb.angularVelocity = Vector3.zero;
 
         carryCount = 0;
         isCarrying = false;
         trashObject = null;
-        rb = null;
+        trashRb = null;
     }
     private void StartThrowing()
     {
@@ -213,14 +216,14 @@ public class PlayerController : MonoBehaviour
 
     private void Throw(float force)
     {
-        if (trashObject == null || rb == null) return;
+        if (trashObject == null || trashRb == null) return;
 
         trashObject.transform.SetParent(null);
 
         trashObject.transform.position = throwPosition.position;
 
-        rb.isKinematic = false;
-        rb.useGravity = true;
+        trashRb.isKinematic = false;
+        trashRb.useGravity = true;
 
         Vector3 direction = cameraTransform.forward;
 
@@ -228,15 +231,15 @@ public class PlayerController : MonoBehaviour
 
         direction.Normalize();
 
-        rb.linearVelocity = direction * force;
+        trashRb.linearVelocity = direction * force;
 
-        rb.angularVelocity = Vector3.zero;
+        trashRb.angularVelocity = Vector3.zero;
 
         carryCount = 0;
         isCarrying = false;
 
         trashObject = null;
-        rb = null;
+        trashRb = null;
     }
 
     private void UpdateThrowArc(float force)
@@ -272,6 +275,32 @@ public class PlayerController : MonoBehaviour
             }
 
             throwArc.SetPosition(i, point);
+        }
+    }
+
+    public void AttachPickerupper()
+    {
+        if (toolUpgrade == 2)
+        {
+            if (trashObject != null)
+                Destroy(trashObject);
+
+            GameObject bin = Instantiate(binObj, binPos.position, binPos.rotation);
+            GameObject tool = Instantiate(toolObj, toolPos.position, toolPos.rotation);
+
+            Rigidbody binRb = bin.GetComponent<Rigidbody>();
+            Rigidbody toolRb = tool.GetComponent<Rigidbody>();
+
+            binRb.isKinematic = true;
+            toolRb.isKinematic = true;
+
+            bin.transform.SetParent(binPos, true);
+            tool.transform.SetParent(toolPos, true);
+
+            bin.transform.localPosition = Vector3.zero;
+            tool.transform.localPosition = Vector3.zero;
+
+
         }
     }
 }

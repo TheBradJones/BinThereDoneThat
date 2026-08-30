@@ -50,6 +50,11 @@ public class Interactable : MonoBehaviour
                     else
                         pc.PickupTrash(hit.collider.gameObject);
                 }
+
+                else if (hit.collider.CompareTag("Tool"))
+                {
+                    pc.AttachPickerupper();
+                }
             }
         }
     }
