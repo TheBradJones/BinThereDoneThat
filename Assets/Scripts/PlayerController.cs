@@ -55,6 +55,9 @@ public class PlayerController : MonoBehaviour
     public GameObject toolObj;
     public Transform binPos;
     public Transform toolPos;
+    public Transform trashPoint;    
+
+    private bool holding;
 
     GameObject trashObject;
     Rigidbody trashRb;
@@ -128,31 +131,49 @@ public class PlayerController : MonoBehaviour
     public void PickupTrash(GameObject trashObj)
     {
         if (carryCount >= maxCarry) return;
-
         
-        // Individual trash carry
-        if (isCarrying) return;
+        if (toolUpgrade == 1)
+        {
+            // Individual trash carry
+            if (isCarrying) return;
 
-        trashObject = trashObj;
+            trashObject = trashObj;
 
-        trashRb = trashObj.GetComponent<Rigidbody>();
+            trashRb = trashObj.GetComponent<Rigidbody>();
 
-        trashRb.isKinematic = true;
-        trashRb.useGravity = false;
-        trashRb.detectCollisions = true;
+            trashRb.isKinematic = true;
+            trashRb.useGravity = false;
+            trashRb.detectCollisions = true;
 
-        trashObject.transform.SetParent(holdPoint, true);
-        trashObject.transform.localPosition = Vector3.zero;
+            trashObject.transform.SetParent(holdPoint, true);
+            trashObject.transform.localPosition = Vector3.zero;
 
-        carryCount++;
-        isCarrying = true;
+            carryCount++;
+            isCarrying = true;
+        }
+        if (toolUpgrade == 2)
+        {
 
-        /*
-        if (trashObject.tag == "Trash")
-            trashCount++;
-        else if (trashObject.tag == "Valuable")
-            valuableCount++;
-        */
+            // How much can be carried at once
+            maxCarry = 10;
+
+            trashObject = trashObj;
+
+            // Get rigidbody
+            trashRb = trashObj.GetComponent<Rigidbody>();
+
+            // Immobilize trashObj
+            trashRb.isKinematic = true;
+            trashRb.useGravity = false;
+            trashRb.detectCollisions = true;
+
+            // Set trashObj 
+            trashObject.transform.SetParent(trashPoint, true);
+            trashObject.transform.localPosition = Vector3.zero;
+
+            // Increment how many being carried
+            carryCount++;
+        }
     }
 
     public void Drop()
@@ -282,6 +303,8 @@ public class PlayerController : MonoBehaviour
     {
         if (toolUpgrade == 2)
         {
+            holding = true;
+
             if (trashObject != null)
                 Destroy(trashObject);
 
