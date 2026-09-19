@@ -24,46 +24,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1302790954040057572}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.13770698, y: -0.73828167, z: -0.66017586, w: -0.012032958}
-  m_LocalPosition: {x: -1.196, y: 0.413, z: 0.72}
-  m_LocalScale: {x: 0.6535202, y: 0.6535201, z: 0.65352017}
+  m_LocalRotation: {x: 0.062402967, y: -0.7322184, z: -0.671492, w: -0.09518784}
+  m_LocalPosition: {x: 0.022999404, y: 0.64499986, z: 0.0032997802}
+  m_LocalScale: {x: 0.23377654, y: 0.23377647, z: 0.23377642}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2014582900093361923}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1452658736372236222
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5519465414526810396}
-  m_Layer: 0
-  m_Name: ToolUpgrade 1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5519465414526810396
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1452658736372236222}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5550062362468802718}
-  - {fileID: 2014582900093361923}
-  m_Father: {fileID: 7883649289617769069}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -84.406, y: -214.769, z: 21.958}
 --- !u!1 &1623794206790212432
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,7 +203,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4065997553618742324}
-  - {fileID: 5519465414526810396}
+  - {fileID: 5550062362468802718}
   m_Father: {fileID: 5083941241373410825}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &5492820472902517305
@@ -352,7 +319,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5550062362468802718}
   m_Layer: 0
-  m_Name: ToolPos
+  m_Name: ToolUpgrade 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -366,12 +333,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2522329674069837001}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.43479565, y: -0.46993488, z: -0.5188034, w: 0.5665307}
+  m_LocalRotation: {x: -0.4347956, y: -0.4699349, z: -0.5188034, w: 0.56653064}
   m_LocalPosition: {x: 0.75000024, y: -0.2909999, z: 0.6330002}
-  m_LocalScale: {x: 0.65352, y: 0.65352005, z: 0.65352}
+  m_LocalScale: {x: 0.65352017, y: 0.65352, z: 0.6535203}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5519465414526810396}
+  m_Father: {fileID: 7883649289617769069}
   m_LocalEulerAnglesHint: {x: -78.596, y: -24.285, z: -64.99}
 --- !u!1 &5412664336525233389
 GameObject:
@@ -445,7 +412,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2014582900093361923}
   m_Layer: 0
-  m_Name: BinPos
+  m_Name: ToolUpgrade 1 Bin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -459,13 +426,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7510355487375892224}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0000000047875806, y: 0.78239834, z: -0.0054623084, w: 0.62275434}
-  m_LocalPosition: {x: -0.6460001, y: -1.591, z: 0.43699962}
+  m_LocalRotation: {x: -0.000000004874892, y: 0.78239834, z: -0.005462309, w: 0.62275434}
+  m_LocalPosition: {x: -0.6460001, y: -0.691, z: 0.52399963}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2219851282288461131}
-  m_Father: {fileID: 5519465414526810396}
+  m_Father: {fileID: 5083941241373410825}
   m_LocalEulerAnglesHint: {x: 0.49, y: 102.962, z: -0.39}
 --- !u!1 &7892636007813227009
 GameObject:
@@ -502,8 +469,9 @@ Transform:
   m_LocalScale: {x: 1.4243, y: 1.4243, z: 1.4243}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7883649289617769069}
   - {fileID: 6514411656658411562}
+  - {fileID: 7883649289617769069}
+  - {fileID: 2014582900093361923}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2888959134033489967
@@ -644,6 +612,10 @@ MonoBehaviour:
   binPos: {fileID: 2014582900093361923}
   toolPos: {fileID: 5550062362468802718}
   trashPoint: {fileID: 2219851282288461131}
+  tiltSpeed: 1.5
+  returnSpeed: 1.5
+  maxTiltAngle: 110
+  releaseTiltThreshold: 0.5
 --- !u!114 &8084645303425221558
 MonoBehaviour:
   m_ObjectHideFlags: 0

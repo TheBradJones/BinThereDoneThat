@@ -1,4 +1,7 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using NUnit.Framework;
 
 public class PlayerController : MonoBehaviour
 {
@@ -59,8 +62,20 @@ public class PlayerController : MonoBehaviour
 
     private bool holding;
 
+    [Header("Emptying")]
+    public float tiltSpeed = 1.5f;
+    public float returnSpeed = 1.5f;
+    public float maxTiltAngle = 110f;
+    public float releaseTiltThreshold = 0.5f;
+
+    float tilt;
+    Quaternion binStartRotation;
+
     GameObject trashObject;
     Rigidbody trashRb;
+
+    List<Rigidbody> binTrash = new List<Rigidbody>();
+    bool binUnlocked;
 
     void Awake()
     {
@@ -71,6 +86,8 @@ public class PlayerController : MonoBehaviour
 
         if (throwArc != null)
             throwArc.enabled = false;
+
+        binStartRotation = binObj.transform.localRotation;
     }
 
     void Update()
@@ -81,16 +98,36 @@ public class PlayerController : MonoBehaviour
         mouseY = Input.GetAxis("Mouse Y");
         jump = Input.GetButton("Jump");
 
-        if (Input.GetKeyDown(throwKey) && isCarrying)
-            StartThrowing();
+        if (toolUpgrade == 1)
+        {
+            if (Input.GetKeyDown(throwKey) && isCarrying)
+                StartThrowing();
 
-        if (isCharging)
-            ChargeThrow();
+            if (isCharging)
+                ChargeThrow();
 
-        if (Input.GetKeyUp(throwKey) && isCharging)
-            ReleaseThrow();
+            if (Input.GetKeyUp(throwKey) && isCharging)
+                ReleaseThrow();
+        }
 
+        if (toolUpgrade == 2)
+        {
+            bool holdKey = Input.GetKey(throwKey);
 
+            float target = holdKey ? 1f : 0f;
+            float speed = holdKey ? tiltSpeed : returnSpeed;
+
+            tilt = Mathf.MoveTowards(tilt, target, speed * Time.deltaTime);
+            tilt = Mathf.Clamp01(tilt); // stop at 0 and 1
+
+            //float angle = Mathf.Abs(maxTiltAngle) * tilt * (reverseDirection)
+
+            if (tilt >= releaseTiltThreshold)
+                UnlockTrashPos();
+
+            binObj.transform.localRotation = binStartRotation * Quaternion.AngleAxis(maxTiltAngle * tilt, Vector3.forward);
+
+        }
     }
 
     void FixedUpdate()
@@ -163,43 +200,89 @@ public class PlayerController : MonoBehaviour
             trashRb = trashObj.GetComponent<Rigidbody>();
 
             // Immobilize trashObj
-            trashRb.isKinematic = true;
-            trashRb.useGravity = false;
+            trashRb.isKinematic = false;
+            trashRb.useGravity = true;
             trashRb.detectCollisions = true;
 
-            // Set trashObj 
+            // Attach trashObj to parent
             trashObject.transform.SetParent(trashPoint, true);
             trashObject.transform.localPosition = Vector3.zero;
+            trashObject.transform.localScale = trashObject.transform.parent.localScale;
 
             // Increment how many being carried
             carryCount++;
+            binTrash.Add(trashRb);
+
+            // Lock position in bin after allowing it find its own location. this is so they dont all lock onto the same location in the bin
+            StartCoroutine(LockTrashPos(trashRb));
         }
+    }
+
+    private IEnumerator LockTrashPos(Rigidbody trashRb)
+    {
+        yield return new WaitForSeconds(1f);
+
+        trashRb.isKinematic = true;
+        trashRb.useGravity = false;
+        trashRb.detectCollisions = true;
+
+        // must collide with other trash
+    }
+
+    private void UnlockTrashPos()
+    {
+        for (int i = binTrash.Count - 1; i >= 0; i--)
+        {
+            Rigidbody rb = binTrash[i];
+
+            if (rb == null)
+            {
+                binTrash.RemoveAt(i);
+                continue;
+            }
+
+            rb.transform.SetParent(null, true);
+            rb.isKinematic = false;
+            rb.useGravity = true;
+            rb.detectCollisions = true;
+
+            binTrash.RemoveAt(i);
+            carryCount--;
+        }
+        
     }
 
     public void Drop()
     {
-        if (!isCarrying || trashObject == null) return;
+        if (toolUpgrade == 1)
+        {
+            if (!isCarrying || trashObject == null) return;
 
-        isCharging = false;
-        chargeTime = 0f;
+            isCharging = false;
+            chargeTime = 0f;
 
-        if (throwArc != null)
-            throwArc.enabled = false;
+            if (throwArc != null)
+                throwArc.enabled = false;
 
-        trashObject.transform.SetParent(null);
+            trashObject.transform.SetParent(null);
 
-        trashObject.transform.position = holdPoint.position;
+            trashObject.transform.position = holdPoint.position;
 
-        trashRb.isKinematic = false;
-        trashRb.useGravity = true;
+            trashRb.isKinematic = false;
+            trashRb.useGravity = true;
 
-        trashRb.linearVelocity = Vector3.zero;
-        trashRb.angularVelocity = Vector3.zero;
+            trashRb.linearVelocity = Vector3.zero;
+            trashRb.angularVelocity = Vector3.zero;
 
-        carryCount = 0;
-        isCarrying = false;
-        trashObject = null;
-        trashRb = null;
+            carryCount = 0;
+            isCarrying = false;
+            trashObject = null;
+            trashRb = null;
+        }
+        if (toolUpgrade == 2)
+        {
+
+        }
     }
     private void StartThrowing()
     {
@@ -323,7 +406,9 @@ public class PlayerController : MonoBehaviour
             bin.transform.localPosition = Vector3.zero;
             tool.transform.localPosition = Vector3.zero;
 
-
+            binObj = bin;
+            binStartRotation = bin.transform.localRotation;
+            tilt = 0;
         }
     }
 }
