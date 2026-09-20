@@ -110,6 +110,7 @@ public class PlayerController : MonoBehaviour
                 ReleaseThrow();
         }
 
+        // Drop trash from upgrade 2
         if (toolUpgrade == 2)
         {
             bool holdKey = Input.GetKey(throwKey);
@@ -122,7 +123,7 @@ public class PlayerController : MonoBehaviour
 
             //float angle = Mathf.Abs(maxTiltAngle) * tilt * (reverseDirection)
 
-            if (tilt >= releaseTiltThreshold)
+            if (tilt >= releaseTiltThreshold / 2)
                 UnlockTrashPos();
 
             binObj.transform.localRotation = binStartRotation * Quaternion.AngleAxis(maxTiltAngle * tilt, Vector3.forward);
@@ -278,10 +279,6 @@ public class PlayerController : MonoBehaviour
             isCarrying = false;
             trashObject = null;
             trashRb = null;
-        }
-        if (toolUpgrade == 2)
-        {
-
         }
     }
     private void StartThrowing()

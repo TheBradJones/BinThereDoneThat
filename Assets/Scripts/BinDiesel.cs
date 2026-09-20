@@ -5,9 +5,17 @@ public class BinDiesel : MonoBehaviour
 {
 
     [Header("Trash")]
+    public int total = 0;
     public int valuables = 0;
     public int trash = 0;
     public int upgradeRequirement = 5;
+
+    UI_Updates UIU;
+
+    private void Start()
+    {
+        UIU = FindAnyObjectByType<UI_Updates>();
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -29,7 +37,9 @@ public class BinDiesel : MonoBehaviour
 
     void UpdateCounter()
     {
-        int total = valuables + trash;
+        total = valuables + trash;
+
+        UIU.UpdateTrashCounter(total);
 
         if (total >= upgradeRequirement)
         {
